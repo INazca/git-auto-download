@@ -1,0 +1,19 @@
+{
+  "name": "git-auto-download",
+  "version": "1.0.0",
+  "description": "A cmd based auto downloader for git",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/INazca/git-auto-download.git"
+  },
+  "author": "Stefan Braun [stefan.braun@stud.uni-regensburg.de",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/INazca/git-auto-download/issues"
+  },
+  "homepage": "https://github.com/INazca/git-auto-download#readme"
+}
