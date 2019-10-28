@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/INazca/git-auto-download/issues"
   },
-  "homepage": "https://github.com/INazca/git-auto-download#readme"
+  "homepage": "https://github.com/INazca/git-auto-download#readme",
+  "dependencies": {
+    "oclif": "^1.14.2"
+  }
 }
