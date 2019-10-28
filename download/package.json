@@ -1,0 +1,40 @@
+{
+  "name": "download",
+  "version": "0.0.0",
+  "author": "INazca @INazca",
+  "bin": {
+    "download": "./bin/run"
+  },
+  "bugs": "https://github.com/INazca/git-auto-download/issues",
+  "dependencies": {
+    "@oclif/command": "^1.5.19",
+    "@oclif/config": "^1.13.3",
+    "@oclif/plugin-help": "^2.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-oclif": "^3.1.0",
+    "rimraf": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/src"
+  ],
+  "homepage": "https://github.com/INazca/git-auto-download",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "src/index.js",
+  "oclif": {
+    "bin": "download"
+  },
+  "repository": "INazca/git-auto-download",
+  "scripts": {
+    "posttest": "eslint .",
+    "test": "echo NO TESTS"
+  }
+}

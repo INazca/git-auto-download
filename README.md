@@ -1,1 +1,0 @@
-# git-auto-download
