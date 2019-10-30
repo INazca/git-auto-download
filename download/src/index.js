@@ -8,7 +8,7 @@ class DownloadCommand extends Command {
   async run() {
     const {args} = this.parse(DownloadCommand)
 
-    downloadFile(`${process.cwd()}\\${args.file}`)
+    parseFile(`${process.cwd()}\\${args.file}`)
   }
 }
 
@@ -34,17 +34,22 @@ DownloadCommand.flags = {
   name: flags.string({char: 'n', description: 'name to print'}),
 }
 
-function downloadFile(path) {
-  fs.readFile(path, 'utf8', onFileRead)
-  console.log('reading file')
+function parseFile(path) {
+  var paths = []
+
+  fs.createReadStream(path)
+  .pipe(csv())
+  .on('error', error => console.error(error))
+  .on('data', data => paths.push(data))
+  .on('end', () => {
+    setupRepos(paths)
+  })
 }
 
-function onFileRead(err, data) {
-  if (err) {
-    console.log(err)
-  } else {
-    console.log(data)
-  }
+function setupRepos(paths) {
+  paths.forEach(path => {
+    console.log(path.path)
+  })
 }
 
 module.exports = DownloadCommand
