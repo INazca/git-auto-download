@@ -1,4 +1,7 @@
+/* eslint-disable no-console */
+/* eslint-env node */
 const {Command, flags} = require('@oclif/command')
+const fs = require('fs')
 
 class DownloadCommand extends Command {
   async run() {
@@ -30,8 +33,17 @@ DownloadCommand.flags = {
   name: flags.string({char: 'n', description: 'name to print'}),
 }
 
-function downloadFile(path){
-  console.log(path)
+function downloadFile(path) {
+  fs.readFile(path, 'utf8', onFileRead)
+  console.log('reading file')
+}
+
+function onFileRead(err, data) {
+  if (err) {
+    console.log(err)
+  } else {
+    console.log(data)
+  }
 }
 
 module.exports = DownloadCommand
