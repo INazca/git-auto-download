@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-env node */
 const {Command, flags} = require('@oclif/command')
+const csv = require('csv-parser')
 const fs = require('fs')
 
 class DownloadCommand extends Command {
