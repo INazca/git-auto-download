@@ -3,6 +3,7 @@
 const {Command, flags} = require('@oclif/command')
 const csv = require('csv-parser')
 const fs = require('fs')
+var exec = require('child_process').exec
 
 class DownloadCommand extends Command {
   async run() {
@@ -46,15 +47,47 @@ function parseFile(path, flags) {
   .on('error', error => console.error(error))
   .on('data', data => paths.push(data))
   .on('end', () => {
-    setupRepositories(paths, flags)
+    mkdirGitFolder(paths, flags)
   })
 }
 
 function setupRepositories(paths, flags) {
-  console.log(flags.grade)
+  // change current working directory to destination folder
+  cdDir('git-repositories')
+
   paths.forEach(path => {
-    console.log(path.path)
+    exec(`git clone ${path.path}`, onDownloadCompleted)
   })
+}
+
+function onDownloadCompleted(err, stdout, stderr) {
+  console.log('stdout: ' + stdout)
+  console.log('stderr: ' + stderr)
+  if (err) {
+    console.log(err)
+  }
+}
+
+function mkdirGitFolder(paths, flags) {
+  exec('mkdir git-repositories', function (err) {
+    if (err) {
+      if (err.code === 1) {
+        setupRepositories(paths, flags)
+      } else {
+        console.log(err)
+      }
+    } else {
+      setupRepositories(paths, flags)
+    }
+  })
+}
+
+function cdDir(dir) {
+  try {
+    process.chdir(dir)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 module.exports = DownloadCommand
