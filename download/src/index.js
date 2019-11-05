@@ -71,9 +71,7 @@ function createReviewBranch(paths, flags, count) {
   // change path to cloned repository
   cd(parseGitLink(paths[count].path))
   // create the new branch locally
-  exec('git checkout -b review', function (err, stdout, stderr) {
-    console.log('sto: ' + stdout)
-    console.log('ste: ' + stderr)
+  exec('git checkout -b review', function (err) {
     if (err) {
       console.log(err)
     } else {
