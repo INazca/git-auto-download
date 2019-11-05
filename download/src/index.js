@@ -54,28 +54,66 @@ function parseFile(path, flags) {
 function setupRepositories(paths, flags) {
   // change current working directory to destination folder
   cd('git-repositories')
+  setupRepository(paths, flags, 0)
+}
 
-  paths.forEach(path => {
-    exec(`git clone ${path.path}`, function (err) {
-      if (err) {
-        console.log(err)
-      } else if (flags.grade) {
-        createReviewBranch(path.path)
-      }
-    })
+function setupRepository(paths, flags, count) {
+  exec(`git clone ${paths[count].path}`, function (err) {
+    if (err) {
+      console.log(err)
+    } else if (flags.grade) {
+      createReviewBranch(paths, flags, count)
+    }
   })
 }
 
-function createReviewBranch(path) {
-  exec('git checkout -b review', function (err) {
+function createReviewBranch(paths, flags, count) {
+  // change path to cloned repository
+  cd(parseGitLink(paths[count].path))
+  // create the new branch locally
+  exec('git checkout -b review', function (err, stdout, stderr) {
+    console.log('sto: ' + stdout)
+    console.log('ste: ' + stderr)
     if (err) {
       console.log(err)
     } else {
-      cd(parseGitLink(path))
-      exec()
+      // now push the changes
+      exec('git push origin review', function (err) {
+        if (err) {
+          console.log(err)
+        }
+        // reset for the next repository
+        cd('../')
+        if (count !== paths.length - 1) {
+          setupRepository(paths, flags, count + 1)
+        }
+      })
     }
   })
+}
 
+// this function will be used later
+function createRevisionFile(paths, flags, count) {
+  exec('type nul > revision.txt', function (err) {
+    if (err) {
+      console.log(err)
+    } else {
+      exec('git add revision.txt', function (err) {
+        if (err) {
+          console.log(err)
+        } else {
+          // commit the new changes
+          exec('git commit -m "Create revision file"', function (err) {
+            if (err) {
+              console.log(err)
+            } else {
+              // put code here later
+            }
+          })
+        }
+      })
+    }
+  })
 }
 
 function mkdirGitFolder(paths, flags) {
@@ -101,8 +139,7 @@ function cd(dir) {
 }
 
 function parseGitLink(path) {
-  console.log(path.substring(path.lastIndexOf('/'), path.length))
-  return path.substring(path.lastIndexOf('/'), path.length)
+  return path.substring(path.lastIndexOf('/') + 1, path.length)
 }
 
 module.exports = DownloadCommand
