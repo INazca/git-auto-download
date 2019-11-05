@@ -53,19 +53,29 @@ function parseFile(path, flags) {
 
 function setupRepositories(paths, flags) {
   // change current working directory to destination folder
-  cdDir('git-repositories')
+  cd('git-repositories')
 
   paths.forEach(path => {
-    exec(`git clone ${path.path}`, onDownloadCompleted)
+    exec(`git clone ${path.path}`, function (err) {
+      if (err) {
+        console.log(err)
+      } else if (flags.grade) {
+        createReviewBranch(path.path)
+      }
+    })
   })
 }
 
-function onDownloadCompleted(err, stdout, stderr) {
-  console.log('stdout: ' + stdout)
-  console.log('stderr: ' + stderr)
-  if (err) {
-    console.log(err)
-  }
+function createReviewBranch(path) {
+  exec('git checkout -b review', function (err) {
+    if (err) {
+      console.log(err)
+    } else {
+      cd(parseGitLink(path))
+      exec()
+    }
+  })
+
 }
 
 function mkdirGitFolder(paths, flags) {
@@ -82,12 +92,17 @@ function mkdirGitFolder(paths, flags) {
   })
 }
 
-function cdDir(dir) {
+function cd(dir) {
   try {
     process.chdir(dir)
   } catch (error) {
     console.log(error)
   }
+}
+
+function parseGitLink(path) {
+  console.log(path.substring(path.lastIndexOf('/'), path.length))
+  return path.substring(path.lastIndexOf('/'), path.length)
 }
 
 module.exports = DownloadCommand
