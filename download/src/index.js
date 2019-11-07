@@ -60,6 +60,8 @@ function setupRepository(paths, flags, count) {
       console.log(err)
     } else if (flags.grade) {
       createReviewBranch(paths, flags, count)
+    } else if (count !== paths.length - 1) {
+      setupRepository(paths, flags, count + 1)
     }
   })
 }
