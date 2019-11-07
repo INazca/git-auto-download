@@ -3,6 +3,7 @@
 const {Command, flags} = require('@oclif/command')
 const csv = require('csv-parser')
 const fs = require('fs')
+const settings = require('./settings')
 var exec = require('child_process').exec
 
 class DownloadCommand extends Command {
@@ -13,10 +14,7 @@ class DownloadCommand extends Command {
   }
 }
 
-DownloadCommand.description = `Describe the command here
-...
-Extra documentation goes here
-`
+DownloadCommand.description = settings.description
 
 // specifiy arguments for the command here
 DownloadCommand.args = [
@@ -36,7 +34,6 @@ DownloadCommand.flags = {
     char: 'g',
     default: false,
   }),
-  name: flags.string({char: 'n', description: 'name to print'}),
 }
 
 function parseFile(path, flags) {
@@ -53,7 +50,7 @@ function parseFile(path, flags) {
 
 function setupRepositories(paths, flags) {
   // change current working directory to destination folder
-  cd('git-repositories')
+  cd(settings.destination)
   setupRepository(paths, flags, 0)
 }
 
@@ -92,7 +89,7 @@ function createReviewBranch(paths, flags, count) {
 
 // this function will be used later
 function createRevisionFile(paths, flags, count) {
-  exec('type nul > revision.txt', function (err) {
+  fs.writeFile(settings.revFileName, 'content', function (err) {
     if (err) {
       console.log(err)
     } else {
