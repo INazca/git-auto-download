@@ -9,8 +9,6 @@ const settings = {
     flags:
     --grade: For each repository in the handed list, create a review branch and a revision file, that is made up by a template
     `,
-  // specify the name of the template. This template has to be saved to git-auto-download/download/
-  templateFile: 'template.md',
   // set the name of the revision file
   revFileName: 'revision.md',
 }

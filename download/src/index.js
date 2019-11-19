@@ -8,9 +8,12 @@ var exec = require('child_process').exec
 
 class DownloadCommand extends Command {
   async run() {
+    var template
     const {args} = this.parse(DownloadCommand)
-    const {flags} = this.parse(DownloadCommand)
-    parseFile(`${process.cwd()}\\${args.file}`, flags)
+    if (args.template) {
+      template = `${process.cwd()}\\${args.template}`
+    }
+    parseFile(`${process.cwd()}\\${args.file}`, template)
   }
 }
 
@@ -21,6 +24,10 @@ DownloadCommand.args = [
   {
     name: 'file',
     required: true,
+  },
+  {
+    name: 'template',
+    required: false,
   },
 ]
 
@@ -36,7 +43,7 @@ DownloadCommand.flags = {
   }),
 }
 
-function parseFile(path, flags) {
+function parseFile(path, template) {
   var paths = []
 
   fs.createReadStream(path)
@@ -44,29 +51,29 @@ function parseFile(path, flags) {
   .on('error', error => console.error(error))
   .on('data', data => paths.push(data))
   .on('end', () => {
-    mkdirGitFolder(paths, flags)
+    mkdirGitFolder(paths, template)
   })
 }
 
-function setupRepositories(paths, flags) {
+function setupRepositories(paths, args) {
   // change current working directory to destination folder
   cd(settings.destination)
-  setupRepository(paths, flags, 0)
+  setupRepository(paths, args, 0)
 }
 
-function setupRepository(paths, flags, count) {
+function setupRepository(paths, template, count) {
   exec(`git clone ${paths[count].path}`, function (err) {
     if (err) {
       console.log(err)
-    } else if (flags.grade) {
-      createReviewBranch(paths, flags, count)
+    } else if (template) {
+      createReviewBranch(paths, template, count)
     } else if (count !== paths.length - 1) {
-      setupRepository(paths, flags, count + 1)
+      setupRepository(paths, template, count + 1)
     }
   })
 }
 
-function createReviewBranch(paths, flags, count) {
+function createReviewBranch(paths, template, count) {
   // change path to cloned repository
   cd(parseGitLink(paths[count].path))
   // create the new branch locally
@@ -74,37 +81,34 @@ function createReviewBranch(paths, flags, count) {
     if (err) {
       console.log(err)
     } else {
-      // now push the changes
-      exec('git push origin review', function (err) {
-        if (err) {
-          console.log(err)
-        }
-        // reset for the next repository
-        cd('../')
-        if (count !== paths.length - 1) {
-          setupRepository(paths, flags, count + 1)
-        }
-      })
+      // now create a revision file
+      createRevisionFile(paths, template, count)
     }
   })
 }
 
-// this function will be used later
-function createRevisionFile(paths, flags, count) {
-  fs.writeFile(settings.revFileName, 'content', function (err) {
+function createRevisionFile(paths, template, count) {
+  fs.readFile(template, 'utf8', function (err, content) {
     if (err) {
       console.log(err)
     } else {
-      exec('git add revision.txt', function (err) {
+      fs.writeFile(settings.revFileName, content, function (err) {
         if (err) {
           console.log(err)
         } else {
-          // commit the new changes
-          exec('git commit -m "Create revision file"', function (err) {
+          exec(`git add ${settings.revFileName}`, function (err) {
             if (err) {
               console.log(err)
             } else {
-              // put code here later
+              // commit the new changes
+              exec('git commit -m "Create revision file"', function (err) {
+                if (err) {
+                  console.log(err)
+                } else {
+                  // put code here later
+                  pushChanges(paths, template, count)
+                }
+              })
             }
           })
         }
@@ -113,16 +117,29 @@ function createRevisionFile(paths, flags, count) {
   })
 }
 
-function mkdirGitFolder(paths, flags) {
+function pushChanges(paths, template, count) {
+  exec('git push origin review', function (err) {
+    if (err) {
+      console.log(err)
+    }
+    // reset for the next repository
+    cd('../')
+    if (count !== paths.length - 1) {
+      setupRepository(paths, template, count + 1)
+    }
+  })
+}
+
+function mkdirGitFolder(paths, template) {
   exec('mkdir git-repositories', function (err) {
     if (err) {
       if (err.code === 1) {
-        setupRepositories(paths, flags)
+        setupRepositories(paths, template)
       } else {
         console.log(err)
       }
     } else {
-      setupRepositories(paths, flags)
+      setupRepositories(paths, template)
     }
   })
 }
