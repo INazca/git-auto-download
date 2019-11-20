@@ -15,6 +15,7 @@ Now run the command:
 ``$ npm link`` (npm needs to be installed)
 
 npm will link the command to your environment variables. You can now use the command simply by typing its name into the console:
+``$ download``
 
 
 # Commands
