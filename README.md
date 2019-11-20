@@ -19,22 +19,26 @@ With the download command you can automatically download a given csv-list of rep
 
 ### Usage
 
-####download <input.csv>
+#### download \<input.csv\>
 Download a list of given git-repositories into the folder *git-repositories* (either existant or will be created, name is editable in git-auto-download/download/src/settings.js). The csv-file must be formatted like that:
 
 ***format:***
+```
 path
 [repository-link]
 [repository-link]
 [...]
+```
 
 ***example:***
+```
 path
 https://github.com/Username/repository1
 https://github.com/Username/repository2
 https://github.com/Username/repository3
+```
 
-####download <input.csv> \<template-file>
+#### download \<input.csv> \<template-file\>
 Download a list of given git-repositories into the folder *git-repositories* and prepare them for grading, meaning:
 - a new branch *review* will be created in every repository
 - a new file, by default called *revision.md* (editable in git-auto-download/download/src/settings.js), will be created
