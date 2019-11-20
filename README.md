@@ -5,7 +5,6 @@ git-auto-download
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/download.svg)](https://npmjs.org/package/download)
-[![CircleCI](https://circleci.com/gh/INazca/git-auto-download/tree/master.svg?style=shield)](https://circleci.com/gh/INazca/git-auto-download/tree/master)
 [![Downloads/week](https://img.shields.io/npm/dw/download.svg)](https://npmjs.org/package/download)
 [![License](https://img.shields.io/npm/l/download.svg)](https://github.com/INazca/git-auto-download/blob/master/package.json)
 
@@ -22,7 +21,7 @@ With the download command you can automatically download a given csv-list of rep
 #### download \<input.csv\>
 Download a list of given git-repositories into the folder *git-repositories* (either existant or will be created, name is editable in git-auto-download/download/src/settings.js). The csv-file must be formatted like that:
 
-***format:***
+*format:*
 ```
 path
 [repository-link]
@@ -30,7 +29,7 @@ path
 [...]
 ```
 
-***example:***
+*example:*
 ```
 path
 https://github.com/Username/repository1
