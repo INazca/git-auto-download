@@ -9,6 +9,13 @@ git-auto-download
 [![License](https://img.shields.io/npm/l/download.svg)](https://github.com/INazca/git-auto-download/blob/master/package.json)
 
 # Installation
+To install a command from git-auto-download (e.g. the download command) you first need to get the repository to your computer. There you have to navigate to it using a command line. When in the git-auto-download folder, change the directory to the folder named like the command you want to install (in this case "download"):
+
+Now run the command:  
+``$ npm link`` (npm needs to be installed)
+
+npm will link the command to your environment variables. You can now use the command simply by typing its name into the console:
+
 
 # Commands
 
